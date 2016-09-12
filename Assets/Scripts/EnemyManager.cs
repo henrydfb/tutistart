@@ -7,7 +7,7 @@ public class EnemyManager : MonoBehaviour {
 
     public GameObject enemy_prefab;
     public GameObject bat_prefab;
-    public GameObject enemy_undefined_prefab;
+    public GameObject crow_prefab;
     Enemy enemy;
     float timer = 0f;
     public float spawn_frequency;
@@ -65,7 +65,7 @@ public class EnemyManager : MonoBehaviour {
         switch (id)
         {
             case 1: enemy = ((GameObject)Instantiate(bat_prefab)).GetComponent<Bat>(); break;
-            case 0: enemy = ((GameObject)Instantiate(enemy_undefined_prefab)).GetComponent<EnemyUndefined>(); break;
+            case 0: enemy = ((GameObject)Instantiate(crow_prefab)).GetComponent<EnemyCrow>(); break;
         }
 
         enemy.GetComponent<Transform>().position = p;
