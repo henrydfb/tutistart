@@ -10,6 +10,12 @@ public class Bat : Enemy {
 	
 	// Update is called once per frame
 	void Update () {
+        if (dead_blow)
+        {
+            blowAway();
+            return;
+        }
+
         gameObject.GetComponent<Transform>().position += new Vector3(-angle * Time.deltaTime, -speed * Time.deltaTime, 0f);
         if (checkIfOutOfScreen())
         {

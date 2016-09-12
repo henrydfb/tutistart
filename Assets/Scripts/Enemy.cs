@@ -8,6 +8,13 @@ public class Enemy : MonoBehaviour {
     public int points;
     public float speed;
     public float angle;
+    protected bool dead_blow = false;
+
+    float death_delay = 0f;
+
+    Vector3 fly_direction;
+
+    GameObject colliding_bullet;
 
 	// Use this for initialization
 	void Start () {
@@ -15,6 +22,9 @@ public class Enemy : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if (dead_blow) {
+            blowAway();
+        }
     }
 
     protected bool checkIfOutOfScreen()
@@ -30,11 +40,31 @@ public class Enemy : MonoBehaviour {
     {
         //Destroy(coll.gameObject);
 
-        GameObject death_animation = Instantiate(death_animation_prefab) as GameObject;
-        death_animation.transform.position = transform.position;
-        Destroy(gameObject);
+        colliding_bullet = coll.gameObject;
+
+        
+        fly_direction = (transform.position - colliding_bullet.transform.position).normalized;
+        dead_blow = true;
         GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
         GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
         GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
+    }
+
+    void destroyEnemy() {
+        GameObject death_animation = Instantiate(death_animation_prefab) as GameObject;
+        death_animation.transform.position = transform.position;
+        Destroy(gameObject);
+    }
+
+    protected void blowAway() {
+        transform.Rotate(new Vector3(0f, 0f, 1f), 1200f * Time.deltaTime);
+
+        death_delay += Time.deltaTime;
+
+        transform.position += fly_direction * speed * 2f * Time.deltaTime;
+
+        if (death_delay >= 1f) {
+            destroyEnemy();
+        }
     }
 }

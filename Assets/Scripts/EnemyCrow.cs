@@ -13,6 +13,11 @@ public class EnemyCrow : Enemy {
 	
 	// Update is called once per frame
 	void Update () {
+        if (dead_blow) {
+            blowAway();
+            return;
+        }
+
         sine += direction * Time.deltaTime;
 
         if (sine >= 1f || sine <= -1f)
