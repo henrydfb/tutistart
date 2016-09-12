@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class ClearScene : MonoBehaviour {
+public class EndScene : MonoBehaviour {
 
     bool gameOver = false;
 
@@ -19,6 +19,12 @@ public class ClearScene : MonoBehaviour {
             GameObject.Find("PlayerScoreInfo").GetComponent<Text>().text = "" + data.score;
             GameObject.Find("BestComboInfo").GetComponent<Text>().text = "" + data.max_combo;
             GameObject.Find("PlayerCorpsesInfo").GetComponent<Text>().text = "" + data.corpses;
+        }
+
+        if (gameOver)
+        {
+            GameObject.Find("Title").GetComponent<Text>().text = "Game Over";
+            GameObject.Find("ButtonText").GetComponent<Text>().text = "Return to title";
         }
     }
 	
