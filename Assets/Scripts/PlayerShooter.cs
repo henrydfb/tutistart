@@ -36,7 +36,7 @@ public class PlayerShooter : MonoBehaviour {
         }
 	}
 
-public void createProjectile() {
+    public void createProjectile() {
         projectile = Instantiate(projectile_prefab, transform.position, Quaternion.identity) as GameObject;
     }
 

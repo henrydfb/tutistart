@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
+    public GameObject aim_assist_prefab;
+    GameObject aim_assist;
+
     Controls controller;
     ScreenCoordinates screen;
     Vector3 init_position;
@@ -33,10 +36,15 @@ public class Projectile : MonoBehaviour {
         rend = GetComponent<Renderer>();
         is_shot = false;
         ui_combo = GameObject.FindWithTag("ComboUI").GetComponent<ComboUI>();
+
+        aim_assist = Instantiate(aim_assist_prefab,transform) as GameObject;
+        aim_assist.transform.localPosition = Vector3.zero;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        direction = (init_position - position).normalized;
+
         if (controller.hold && !is_shot)
             aim();
 
@@ -58,10 +66,12 @@ public class Projectile : MonoBehaviour {
 
         position = init_position + offset;
         transform.position = position;
+
+        aim_assist.transform.position = transform.position;
+        aim_assist.transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private void shoot() {
-        direction = (init_position - position).normalized;
         is_shot = true;
 
         if (coll == null)
