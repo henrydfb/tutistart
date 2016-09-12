@@ -28,7 +28,8 @@ public class Enemy : MonoBehaviour {
     {
         //Destroy(coll.gameObject);
         Destroy(gameObject);
-        GameObject.Find("Player").GetComponent<PlayerRemove>().increaseScore(points);
+        GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
         GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
+        GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
     }
 }
