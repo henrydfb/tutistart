@@ -29,7 +29,7 @@ public class PlayerShooter : MonoBehaviour {
         {
             createProjectile();
         }
-        print(life);
+
         if (life <= 0)
         {
             ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();

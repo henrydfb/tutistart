@@ -51,8 +51,8 @@ public class EnemyManager : MonoBehaviour {
 
     void OnDestroy()
     {
-        ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
-        ShooterData.saveEnemyManager(enemy_killed, wave_size);
+        ShooterData shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+        shooter_data.saveEnemyManager(enemy_killed, wave_size);
     }
 
     public void increaseEnemyKilled()

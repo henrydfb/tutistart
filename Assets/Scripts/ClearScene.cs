@@ -10,7 +10,7 @@ public class ClearScene : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         ShooterData data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
-        print(data);
+
         if (data)
         {
             gameOver = data.gameOver;
