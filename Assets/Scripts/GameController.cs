@@ -18,13 +18,13 @@ public class GameController : MonoBehaviour {
 
     public int GRID_SIZE_I;
     public int GRID_SIZE_J;
+    public int ROCKS_NUM = 3;
+    public int BODIES_NUM = 10;
+
     public Vector3 gridStartPos;
     public GridElementType[][] grid;
 
-    private const int ROCKS_NUM = 3;
-    private const int BODIES_NUM = 10;
-
-    private int initialTime = 30; //Seconds
+    private int initialTime = 500; //Seconds
     private PlayerController player;
     private bool instantiating;
     private float lastBodiesRow;

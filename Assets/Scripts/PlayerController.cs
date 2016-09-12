@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
     public GameObject emptySpacePrefab;
 
     private const int ROCK_TIME = 3;
+    private const int MOVING_STEPS = 5;
     private GameController gameController;
     private GameObject rockFeedback;
     private Vector3 velocity;
@@ -15,8 +16,11 @@ public class PlayerController : MonoBehaviour {
     private bool inRock;
     private float rockTimer;
     private float rockFeedIniSca;
+    private bool isMoving;
+    private Vector3 movingPos;
+    private float movingSpeed;
     
-
+   
 	// Use this for initialization
 	void Start () {
         velocity = new Vector3();
@@ -32,6 +36,9 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
+        Vector2 aim;
+        float prevDist;
+
         //Input Controller
         HandleInput();
 
@@ -53,49 +60,111 @@ public class PlayerController : MonoBehaviour {
                 rockTimer += Time.deltaTime;
             }
         }
+
+        if (isMoving)
+        {
+            aim = Aim(new Vector2(transform.position.x, transform.position.y), movingPos);
+            prevDist = Vector2.Distance(transform.position, movingPos);
+            transform.position += new Vector3(aim.x * movingSpeed, aim.y * movingSpeed, 0);
+            //Debug.Log("dis: " + Vector3.Distance(transform.position, movingPos));
+            if (Vector2.Distance(transform.position, movingPos) > prevDist)
+            {
+                transform.position = movingPos;
+                isMoving = false;
+            }
+            GameObject.Find("SandBack").GetComponent<SandBackController>().Emit(transform.position);
+            Instantiate(emptySpacePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+        }
 	}
 
     public void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) && !inRock)
+        //Mouse
+        if (Input.GetButtonDown("Fire1") && !inRock && !isMoving)
         {
-            if (indexI - 1 >= 0)
-            {
-                inRock = gameController.grid[indexI - 1][indexJ + 1] == GameController.GridElementType.Rock;
-
-                transform.position += new Vector3(-speed, -speed);
-                indexI--;
-                indexJ++;
-            }
+            //Right
+            if (Input.mousePosition.x > Screen.width / 2)
+                MoveRight();
+            //Left
             else
-            {
-                inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
-                transform.position += new Vector3(0, -speed);
-                indexJ++;
-            }
-
-            Instantiate(emptySpacePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+                MoveLeft();
         }
 
+        //Left Keyboard
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && !inRock && !isMoving)
+            MoveLeft();
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) && !inRock)
+        //Right Keyboard
+        if (Input.GetKeyDown(KeyCode.RightArrow) && !inRock && !isMoving)
+            MoveRight();
+    }
+
+    private void MoveRight()
+    {
+        if (indexI + 1 < gameController.GRID_SIZE_I)
         {
-            if (indexI + 1 < gameController.GRID_SIZE_I)
-            {
-                inRock = gameController.grid[indexI + 1][indexJ + 1] == GameController.GridElementType.Rock;
-                transform.position += new Vector3(speed, -speed);
-                indexI++;
-                indexJ++;
-            }
-            else
-            {
-                inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
-                transform.position += new Vector3(0, -speed);
-                indexJ++;
-            }
-
-            Instantiate(emptySpacePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+            inRock = gameController.grid[indexI + 1][indexJ + 1] == GameController.GridElementType.Rock;
+            movingPos = transform.position + new Vector3(speed, -speed);
+            indexI++;
+            indexJ++;
         }
+        else
+        {
+            inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
+            movingPos = transform.position + new Vector3(0, -speed);
+            indexJ++;
+        }
+        isMoving = true;
+        movingSpeed = Vector3.Distance(transform.position, movingPos) / MOVING_STEPS;
+
+        //Instantiate(emptySpacePrefab, new Vector3(movingPos.x, movingPos.y, 0), Quaternion.identity);
+    }
+
+    private void MoveLeft()
+    {
+        if (indexI - 1 >= 0)
+        {
+            inRock = gameController.grid[indexI - 1][indexJ + 1] == GameController.GridElementType.Rock;
+            movingPos = transform.position + new Vector3(-speed, -speed);
+            indexI--;
+            indexJ++;
+        }
+        else
+        {
+            inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
+            movingPos = transform.position + new Vector3(0, -speed);
+            indexJ++;
+        }
+
+        isMoving = true;
+        movingSpeed = Vector3.Distance(transform.position, movingPos) / MOVING_STEPS;
+        //Instantiate(emptySpacePrefab, new Vector3(movingPos.x, movingPos.y, 0), Quaternion.identity);
+    }
+
+    public static Vector2 Aim(Vector2 initialPoint, Vector2 finalPoint)
+    {
+        Vector2 direction, aim;
+        float mod;
+
+        direction = new Vector2(finalPoint.x - initialPoint.x, finalPoint.y - initialPoint.y);
+
+        mod = Mathf.Sqrt(Mathf.Pow(direction.x, 2) + Mathf.Pow(direction.y, 2));
+
+        if (mod == 0)
+        {
+            mod = Mathf.Sqrt(Mathf.Pow(finalPoint.x, 2) + Mathf.Pow(finalPoint.y, 2));
+            finalPoint.x = finalPoint.x / mod;
+            finalPoint.y = finalPoint.y / mod;
+            aim = finalPoint;
+        }
+        else
+        {
+            direction.x = direction.x / mod;
+            direction.y = direction.y / mod;
+            aim = direction;
+        }
+
+        return aim;
     }
 
     private void AdjustSandBack()
