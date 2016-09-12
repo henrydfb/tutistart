@@ -6,12 +6,19 @@ public class MainMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetButtonDown("Fire1"))
-            SceneManager.LoadScene("Scenes/Dig");
-	}
+
+    // Update is called once per frame
+    void Update(){
+    }
+
+    public void goToGame()
+    {
+        SceneManager.LoadScene("Scenes/Dig");
+    }
+
+    public void goToUpgrade()
+    {
+        //SceneManager.LoadScene();
+    }
 }

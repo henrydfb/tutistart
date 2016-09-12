@@ -7,7 +7,7 @@ public class EnemyManager : MonoBehaviour {
 
     public GameObject enemy_prefab;
     public GameObject bat_prefab;
-    public GameObject enemy_undefined_prefab;
+    public GameObject crow_prefab;
     Enemy enemy;
     float timer = 0f;
     public float spawn_frequency;
@@ -32,7 +32,7 @@ public class EnemyManager : MonoBehaviour {
             timer += Time.deltaTime;
             if (timer >= spawn_frequency)
             {
-                Vector3 point = new Vector3(Random.Range(0f, Screen.width), Random.Range(Screen.height * spawn_area_down, Screen.height * spawn_area_up), 0);
+                Vector3 point = new Vector3(Random.Range(20f, Screen.width - 20f), Random.Range(Screen.height * spawn_area_down, Screen.height * spawn_area_up), 0);
                 Camera camera = Camera.main;
                 Vector3 p = camera.ScreenToWorldPoint(point);
                 p.z = 0;
@@ -43,8 +43,16 @@ public class EnemyManager : MonoBehaviour {
         }
         else if (enemy_on_screen == 0)
         {
-            SceneManager.LoadScene("Scenes/Dig");
+            ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+            ShooterData.gameOver = false;
+            SceneManager.LoadScene("Scenes/EndScene");
         }
+    }
+
+    void OnDestroy()
+    {
+        ShooterData shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+        shooter_data.saveEnemyManager(enemy_killed, wave_size);
     }
 
     public void increaseEnemyKilled()
@@ -65,7 +73,7 @@ public class EnemyManager : MonoBehaviour {
         switch (id)
         {
             case 1: enemy = ((GameObject)Instantiate(bat_prefab)).GetComponent<Bat>(); break;
-            case 0: enemy = ((GameObject)Instantiate(enemy_undefined_prefab)).GetComponent<EnemyUndefined>(); break;
+            case 0: enemy = ((GameObject)Instantiate(crow_prefab)).GetComponent<EnemyCrow>(); break;
         }
 
         enemy.GetComponent<Transform>().position = p;

@@ -10,9 +10,11 @@ public class PlayerShooter : MonoBehaviour {
     Controls controller;
     GameObject score_display;
     GameObject life_display;
+    GameObject corpses_display;
 
     public int score;
     public int life;
+    public int corpses;
 
     // Use this for initialization
     void Start () {
@@ -21,22 +23,35 @@ public class PlayerShooter : MonoBehaviour {
         score_display.GetComponent<Text>().text = "Player Score : " + score;
         life_display = GameObject.Find("PlayerLifeDisplay");
         life_display.GetComponent<Text>().text = "Player life : " + life;
+        corpses_display = GameObject.Find("CorpsesAmountDisplay");
+        corpses_display.GetComponent<Text>().text = "Corpses : " + corpses;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (controller.isClicked())
+        if (controller.isClicked() && corpses > 0)
         {
             createProjectile();
+            corpses -= 1;
+            corpses_display.GetComponent<Text>().text = "Corpses : " + corpses;
         }
 
         if (life <= 0)
         {
-            SceneManager.LoadScene("Scenes/GameOver");
+            ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+            ShooterData.gameOver = true;
+            SceneManager.LoadScene("Scenes/EndScene");
         }
 	}
 
-public void createProjectile() {
+
+    void OnDestroy()
+    {
+        ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+        ShooterData.savePlayer(score, life, corpses);
+    }
+
+    public void createProjectile() {
         projectile = Instantiate(projectile_prefab, transform.position, Quaternion.identity) as GameObject;
     }
 

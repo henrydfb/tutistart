@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
+    public GameObject aim_assist_prefab;
+    GameObject aim_assist;
+
     Controls controller;
     ScreenCoordinates screen;
     Vector3 init_position;
@@ -11,6 +14,8 @@ public class Projectile : MonoBehaviour {
     Vector3 offset;
     Vector3 mouse_pos_init;
     Vector3 mouse_pos_current;
+
+    ShooterData shooter_data;
 
     Renderer rend;
 
@@ -22,7 +27,7 @@ public class Projectile : MonoBehaviour {
 
     public float speed = 1.0f;
 
-    int victims = 0;
+    public int victims = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -33,10 +38,17 @@ public class Projectile : MonoBehaviour {
         rend = GetComponent<Renderer>();
         is_shot = false;
         ui_combo = GameObject.FindWithTag("ComboUI").GetComponent<ComboUI>();
+
+        aim_assist = Instantiate(aim_assist_prefab,transform) as GameObject;
+        aim_assist.transform.localPosition = Vector3.zero;
+
+        shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
     }
 	
 	// Update is called once per frame
 	void Update () {
+        direction = (init_position - position).normalized;
+
         if (controller.hold && !is_shot)
             aim();
 
@@ -58,10 +70,21 @@ public class Projectile : MonoBehaviour {
 
         position = init_position + offset;
         transform.position = position;
+
+        aim_assist.transform.position = transform.position;
+
+        if (direction != Vector3.zero)
+        {
+            aim_assist.transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     private void shoot() {
-        direction = (init_position - position).normalized;
+        if (direction == Vector3.zero) {
+            Destroy(gameObject);
+            return;
+        }
+
         is_shot = true;
 
         if (coll == null)
@@ -88,6 +111,9 @@ public class Projectile : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D coll) {
 
         victims += 1;
+
+        if (victims > shooter_data.max_combo)
+            shooter_data.max_combo = victims;
 
         if (victims > 1) {
             ui_combo.showCombo(victims);
