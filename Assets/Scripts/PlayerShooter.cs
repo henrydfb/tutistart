@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerShooter : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class PlayerShooter : MonoBehaviour {
     GameObject projectile;
     Controls controller;
     GameObject score_display;
+    GameObject life_display;
 
     public int score;
     public int life;
@@ -17,12 +19,20 @@ public class PlayerShooter : MonoBehaviour {
         controller = GameObject.FindWithTag("GameController").GetComponent<Controls>();
         score_display = GameObject.Find("PlayerScoreDisplay");
         score_display.GetComponent<Text>().text = "Player Score : " + score;
+        life_display = GameObject.Find("PlayerLifeDisplay");
+        life_display.GetComponent<Text>().text = "Player life : " + life;
     }
 	
 	// Update is called once per frame
 	void Update () {
-	    if (controller.isClicked()) {
+        if (controller.isClicked())
+        {
             createProjectile();
+        }
+
+        if (life <= 0)
+        {
+            SceneManager.LoadScene("Scenes/GameOver");
         }
 	}
 
@@ -34,5 +44,11 @@ public class PlayerShooter : MonoBehaviour {
     {
         score += new_score;
         score_display.GetComponent<Text>().text = "Player Score : " + score;
+    }
+
+    public void decreaseLife(int life_lose)
+    {
+        life -= life_lose;
+        life_display.GetComponent<Text>().text = "Player life : " + life;
     }
 }

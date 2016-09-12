@@ -30,5 +30,6 @@ public class Enemy : MonoBehaviour {
         Destroy(gameObject);
         GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
         GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
+        GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
     }
 }

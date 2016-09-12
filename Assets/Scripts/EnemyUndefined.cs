@@ -20,6 +20,9 @@ public class EnemyUndefined : Enemy {
 
         gameObject.GetComponent<Transform>().position += new Vector3(-sine * angle * Time.deltaTime, -speed * Time.deltaTime, 0f);
         if (checkIfOutOfScreen())
+        {
+            GameObject.Find("Player").GetComponent<PlayerShooter>().decreaseLife(1);
             Destroy(gameObject);
+        }
     }
 }
