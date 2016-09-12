@@ -11,7 +11,7 @@ public class DigSummaryController : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-        storeData = GameObject.Find("StoreData").GetComponent<StoreDataController>();
+        storeData = GameObject.FindGameObjectWithTag("StoreData").GetComponent<StoreDataController>();
         bodiesText = GameObject.Find("BodiesText").GetComponent<Text>();
         bodiesText.text = storeData.bodies.ToString();
 	}

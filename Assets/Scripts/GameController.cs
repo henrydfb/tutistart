@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
@@ -14,23 +15,27 @@ public class GameController : MonoBehaviour {
 
     public GameObject bodyPrefab;
     public GameObject rockPrefab;
-    public float gridSeparation;
+    public float gridSeparationI;
+    public float gridSeparationJ;
 
     public int GRID_SIZE_I;
     public int GRID_SIZE_J;
-    public int ROCKS_NUM = 3;
-    public int BODIES_NUM = 10;
+    public int ROCKS_NUM;
+    public int BODIES_NUM;
+    public int INITIAL_TIME; //Seconds
 
     public Vector3 gridStartPos;
     public GridElementType[][] grid;
+    public GameObject[][] bodiesGrid;
+    public GameObject storeDataPrefab;
 
-    private int initialTime = 500; //Seconds
     private PlayerController player;
     private bool instantiating;
     private float lastBodiesRow;
     private float prevBodiesRow;
     private Text timerText;
     private Text bodiesText;
+    private Text levelText;
     private float time;
     private int bodies;
     private StoreDataController storeData;
@@ -38,19 +43,60 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
+        GameObject storeDataObj;
+
+        storeDataObj = GameObject.FindGameObjectWithTag("StoreData");
+        if (storeDataObj == null)
+            storeDataObj = Instantiate(storeDataPrefab);
+
+        storeData = storeDataObj.GetComponent<StoreDataController>();
+        InitLevel();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         player.indexI = 0;
         player.indexJ = 0;
-        player.transform.position = new Vector3(gridStartPos.x + gridSeparation * player.indexI,gridStartPos.y,player.transform.position.z);
+        player.transform.position = new Vector3(gridStartPos.x + gridSeparationI * player.indexI,gridStartPos.y,player.transform.position.z);
         timerText = GameObject.Find("Time").GetComponent<Text>();
         bodiesText = GameObject.Find("Bodies").GetComponent<Text>();
-        storeData = GameObject.Find("StoreData").GetComponent<StoreDataController>();
-        time = initialTime;
+        levelText = GameObject.Find("Level").GetComponent<Text>();
+        time = INITIAL_TIME;
         bodies = 0;
         UpdateTimer();
         grid = new GridElementType[GRID_SIZE_I][];
+        bodiesGrid = new GameObject[GRID_SIZE_I][];
+        lastBodiesRow = -gridSeparationJ;
+        player.indexJ = -1;
         InstantiateBodies();
+
+        levelText.text = "level " + storeData.level;
 	}
+
+    public void GoToUpgrade()
+    {
+        SceneManager.LoadScene("Upgrade");
+    }
+
+    private void InitLevel()
+    {
+        //Level
+        //First level
+        if (storeData.firstLevel)
+        {
+            storeData.level = 1;
+            storeData.MAX_BODIES = BODIES_NUM;
+            storeData.MAX_ROCKS = ROCKS_NUM;
+            storeData.TIME = INITIAL_TIME;
+            storeData.firstLevel = false;
+        }
+        else
+        {
+            storeData.level++;
+            BODIES_NUM = storeData.MAX_BODIES;
+            ROCKS_NUM = storeData.MAX_ROCKS;
+            INITIAL_TIME = storeData.TIME;
+        }
+
+        storeData.coins = 500;
+    }
 
     public void UpdateTimer()
     { 
@@ -66,51 +112,67 @@ public class GameController : MonoBehaviour {
         bodiesText.text = "x " + bodies.ToString("000");
     }
 
+    struct EmptySpace
+    {
+        public int i;
+        public int j;
+    };
+
     public void InstantiateBodies()
     {
         int ran, rocks, bodies;
+        List<EmptySpace> emptySpaces;
+        GameObject body;
+        EmptySpace space;
 
         rocks = ROCKS_NUM;
         bodies = BODIES_NUM;
-        player.indexJ = -1;
-        gridStartPos = new Vector3(gridStartPos.x, (player.transform.position + new Vector3(0, -gridSeparation)).y);
+        gridStartPos = new Vector3(gridStartPos.x, lastBodiesRow);
+        emptySpaces = new List<EmptySpace>();
         for (int i = 0; i < GRID_SIZE_I; i++)
         {
             if (grid[i] == null)
                 grid[i] = new GridElementType[GRID_SIZE_J];
 
+            if (bodiesGrid[i] == null)
+                bodiesGrid[i] = new GameObject[GRID_SIZE_J];
+
             for (int j = 0; j < GRID_SIZE_J; j++)
             {
-                if (j != 0)
-                {
-                    ran = Random.Range(0, 100);
-                    if (ran > 90 && ran < 95 && bodies > 0)
-                    {
-                        Instantiate(bodyPrefab, gridStartPos + new Vector3(i * gridSeparation, -j * gridSeparation), Quaternion.identity);
-                        grid[i][j] = GridElementType.Body;
-                        bodies--;
-                    }
-                    else if (ran > 95 && rocks > 0)
-                    {
-                        Instantiate(rockPrefab, gridStartPos + new Vector3(i * gridSeparation, -j * gridSeparation), Quaternion.identity);
-                        grid[i][j] = GridElementType.Rock;
-                        rocks--;
-                    }
-                    else
-                    { 
-                        //Empty
-                        grid[i][j] = GridElementType.Empty;
-                    }
+               grid[i][j] = GridElementType.Empty;
 
-                }
-                else
-                {
-                    grid[i][j] = GridElementType.Empty;
-                }
-
-                if (j == GRID_SIZE_J - 1)
-                    lastBodiesRow = gridStartPos .y - j * gridSeparation;
+               if (j == GRID_SIZE_J - 1)
+                   lastBodiesRow = gridStartPos .y - j * gridSeparationJ;
+               space = new EmptySpace();
+               space.i = i;
+               space.j = j;
+               if(j != 0)
+                    emptySpaces.Add(space);
             }
+        }
+
+        //Bodies
+        for (int i = 0; i < BODIES_NUM; i++)
+        {
+            ran = Random.Range(0, emptySpaces.Count - 1);
+
+            body = (GameObject)Instantiate(bodyPrefab, gridStartPos + new Vector3(emptySpaces[ran].i * gridSeparationI, -emptySpaces[ran].j * gridSeparationJ), Quaternion.identity);
+            body.name = emptySpaces[ran].i.ToString() + emptySpaces[ran].j.ToString();
+            grid[emptySpaces[ran].i][emptySpaces[ran].j] = GridElementType.Body;
+            bodiesGrid[emptySpaces[ran].i][emptySpaces[ran].j] = body;
+
+            emptySpaces.RemoveAt(ran);
+        }
+
+        //Rocks
+        for (int i = 0; i < ROCKS_NUM; i++)
+        {
+            ran = Random.Range(0, emptySpaces.Count - 1);
+
+            Instantiate(rockPrefab, gridStartPos + new Vector3(emptySpaces[ran].i * gridSeparationI, -emptySpaces[ran].j * gridSeparationJ), Quaternion.identity);
+            grid[emptySpaces[ran].i][emptySpaces[ran].j] = GridElementType.Rock;
+
+            emptySpaces.RemoveAt(ran);
         }
     }
 
@@ -125,7 +187,7 @@ public class GameController : MonoBehaviour {
     {
         if(instantiating)
         {
-            if (player.transform.position.y < prevBodiesRow - gridSeparation)
+            if (player.transform.position.y < prevBodiesRow - gridSeparationJ)
             {
                 Debug.Log("FALSE!");
                 instantiating = false;
@@ -133,10 +195,11 @@ public class GameController : MonoBehaviour {
         }
         else
         {
-            if (player.transform.position.y <= lastBodiesRow + gridSeparation / 2 && player.transform.position.y >= lastBodiesRow - gridSeparation / 2)
+            if (player.transform.position.y <= lastBodiesRow + gridSeparationJ / 2 && player.transform.position.y >= lastBodiesRow - gridSeparationJ / 2)
             {
                 instantiating = true;
                 prevBodiesRow = lastBodiesRow;
+                player.indexJ = 0;
                 InstantiateBodies();
             }
         }
