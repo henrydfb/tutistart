@@ -68,7 +68,11 @@ public class Projectile : MonoBehaviour {
         transform.position = position;
 
         aim_assist.transform.position = transform.position;
-        aim_assist.transform.rotation = Quaternion.LookRotation(direction);
+
+        if (direction != Vector3.zero)
+        {
+            aim_assist.transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     private void shoot() {
