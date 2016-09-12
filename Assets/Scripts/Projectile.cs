@@ -14,10 +14,15 @@ public class Projectile : MonoBehaviour {
 
     Renderer rend;
 
+    ComboUI ui_combo;
+    Rigidbody2D coll;
+
     bool is_shot = false;
     bool has_passed_screen = false;
 
     public float speed = 1.0f;
+
+    int victims = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -27,7 +32,7 @@ public class Projectile : MonoBehaviour {
         mouse_pos_init = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         rend = GetComponent<Renderer>();
         is_shot = false;
-
+        ui_combo = GameObject.FindWithTag("ComboUI").GetComponent<ComboUI>();
     }
 	
 	// Update is called once per frame
@@ -58,6 +63,12 @@ public class Projectile : MonoBehaviour {
     private void shoot() {
         direction = (init_position - position).normalized;
         is_shot = true;
+
+        if (coll == null)
+        {
+            coll = gameObject.AddComponent<Rigidbody2D>();
+            coll.gravityScale = 0;
+        }
     }
 
     private void moveProjectile() {
@@ -72,5 +83,14 @@ public class Projectile : MonoBehaviour {
         if (screen.isObjectOutOfScreen(gameObject) && has_passed_screen)
             Destroy(gameObject);
 
+    }
+
+    void OnCollisionEnter2D(Collision2D coll) {
+
+        victims += 1;
+
+        if (victims > 1) {
+            ui_combo.showCombo(victims);
+        }
     }
 }
