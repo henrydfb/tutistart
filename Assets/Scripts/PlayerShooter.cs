@@ -29,12 +29,20 @@ public class PlayerShooter : MonoBehaviour {
         {
             createProjectile();
         }
-
+        print(life);
         if (life <= 0)
         {
-            SceneManager.LoadScene("Scenes/GameOver");
+            ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+            ShooterData.gameOver = true;
+            SceneManager.LoadScene("Scenes/EndScene");
         }
 	}
+
+    void OnDestroy()
+    {
+        ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+        ShooterData.savePlayer(score, life);
+    }
 
 public void createProjectile() {
         projectile = Instantiate(projectile_prefab, transform.position, Quaternion.identity) as GameObject;
