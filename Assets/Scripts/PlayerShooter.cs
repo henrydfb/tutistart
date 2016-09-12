@@ -38,13 +38,14 @@ public class PlayerShooter : MonoBehaviour {
         }
 	}
 
+
     void OnDestroy()
     {
         ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
         ShooterData.savePlayer(score, life);
     }
 
-public void createProjectile() {
+    public void createProjectile() {
         projectile = Instantiate(projectile_prefab, transform.position, Quaternion.identity) as GameObject;
     }
 

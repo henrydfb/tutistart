@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
+    public GameObject death_animation_prefab;
+
     public int points;
     public float speed;
     public float angle;
@@ -27,6 +29,9 @@ public class Enemy : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D coll)
     {
         //Destroy(coll.gameObject);
+
+        GameObject death_animation = Instantiate(death_animation_prefab) as GameObject;
+        death_animation.transform.position = transform.position;
         Destroy(gameObject);
         GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
         GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
