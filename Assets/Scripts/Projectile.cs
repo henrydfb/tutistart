@@ -72,6 +72,11 @@ public class Projectile : MonoBehaviour {
     }
 
     private void shoot() {
+        if (direction == Vector3.zero) {
+            Destroy(gameObject);
+            return;
+        }
+
         is_shot = true;
 
         if (coll == null)
