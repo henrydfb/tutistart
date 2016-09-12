@@ -10,6 +10,7 @@ public class ShooterData : MonoBehaviour {
 
     public int score;
     public int life;
+    public int corpses;
 
     public int max_combo;
 
@@ -31,9 +32,10 @@ public class ShooterData : MonoBehaviour {
         wave_size = em_wave_size;
     }
 
-    public void savePlayer(int pl_score, int pl_life)
+    public void savePlayer(int pl_score, int pl_life, int pl_corpses)
     {
         score = pl_score;
         life = pl_life;
+        corpses = pl_corpses;
     }
 }
