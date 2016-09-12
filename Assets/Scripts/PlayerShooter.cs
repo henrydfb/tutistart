@@ -8,6 +8,7 @@ public class PlayerShooter : MonoBehaviour {
     GameObject projectile;
     Controls controller;
     GameObject score_display;
+    LineRenderer aim_assist;
 
     public int score;
     public int life;
@@ -28,6 +29,16 @@ public class PlayerShooter : MonoBehaviour {
 
     public void createProjectile() {
         projectile = Instantiate(projectile_prefab, transform.position, Quaternion.identity) as GameObject;
+
+        if (aim_assist == null) {
+            aim_assist = gameObject.AddComponent<LineRenderer>();
+            aim_assist.SetWidth(0.1f, 0.1f);
+            aim_assist.material.color = Color.white;
+            aim_assist.SetColors(Color.white, Color.white);
+            aim_assist.SetPosition(0, transform.position);
+            aim_assist.SetPosition(1, new Vector3(0f, 5f, 0f));
+            
+        }
     }
 
     public void increaseScore(int new_score)
