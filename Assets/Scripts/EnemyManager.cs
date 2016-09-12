@@ -34,7 +34,6 @@ public class EnemyManager : MonoBehaviour {
             {
                 Vector3 point = new Vector3(Random.Range(0f, Screen.width), Random.Range(Screen.height * spawn_area_down, Screen.height * spawn_area_up), 0);
                 Camera camera = Camera.main;
-                Debug.Log(point);
                 Vector3 p = camera.ScreenToWorldPoint(point);
                 p.z = 0;
                 createEnemy(p);
