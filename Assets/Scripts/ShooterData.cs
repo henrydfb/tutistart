@@ -11,11 +11,18 @@ public class ShooterData : MonoBehaviour {
     public int score;
     public int life;
 
+    public int max_combo;
+
     public bool gameOver;
 
     void Awake()
     {
             DontDestroyOnLoad(this);   
+    }
+
+    void Start()
+    {
+        max_combo = 0;
     }
 
     public void saveEnemyManager(int em_enemy_killed, int em_wave_size)

@@ -15,6 +15,8 @@ public class Projectile : MonoBehaviour {
     Vector3 mouse_pos_init;
     Vector3 mouse_pos_current;
 
+    ShooterData shooter_data;
+
     Renderer rend;
 
     ComboUI ui_combo;
@@ -39,6 +41,8 @@ public class Projectile : MonoBehaviour {
 
         aim_assist = Instantiate(aim_assist_prefab,transform) as GameObject;
         aim_assist.transform.localPosition = Vector3.zero;
+
+        shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
     }
 	
 	// Update is called once per frame
@@ -107,6 +111,9 @@ public class Projectile : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D coll) {
 
         victims += 1;
+
+        if (victims > shooter_data.max_combo)
+            shooter_data.max_combo = victims;
 
         if (victims > 1) {
             ui_combo.showCombo(victims);

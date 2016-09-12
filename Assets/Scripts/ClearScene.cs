@@ -17,6 +17,7 @@ public class ClearScene : MonoBehaviour {
             GameObject.Find("EnemyKilledInfo").GetComponent<Text>().text = data.enemy_killed + " / " + data.wave_size;
             GameObject.Find("PlayerLivesInfo").GetComponent<Text>().text = "" + data.life;
             GameObject.Find("PlayerScoreInfo").GetComponent<Text>().text = "" + data.score;
+            GameObject.Find("BestComboInfo").GetComponent<Text>().text = "" + data.max_combo;
         }
     }
 	
