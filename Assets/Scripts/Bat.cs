@@ -14,6 +14,7 @@ public class Bat : Enemy {
         if (checkIfOutOfScreen())
         {
             GameObject.Find("Player").GetComponent<PlayerShooter>().decreaseLife(1);
+            GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
             Destroy(gameObject);
         }
     }
