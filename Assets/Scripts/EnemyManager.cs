@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EnemyManager : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class EnemyManager : MonoBehaviour {
     GameObject enemy_count_display;
     public float spawn_area_up;
     public float spawn_area_down;
+    int enemy_on_screen = 0;
 
     // Use this for initialization
     void Start () {
@@ -39,6 +41,10 @@ public class EnemyManager : MonoBehaviour {
                 enemy_count += 1;
             }
         }
+        else if (enemy_on_screen == 0)
+        {
+            SceneManager.LoadScene("Scenes/Dig");
+        }
     }
 
     public void increaseEnemyKilled()
@@ -47,8 +53,14 @@ public class EnemyManager : MonoBehaviour {
         enemy_count_display.GetComponent<Text>().text = "Enemy killed : " + enemy_killed + " / " + wave_size;
     }
 
+    public void decreaseEnemyOnScreen()
+    {
+        enemy_on_screen -= 1;
+    }
+
     public void createEnemy(Vector3 p)
     {
+        enemy_on_screen += 1;
         int id = Random.Range(0, 2);
         switch (id)
         {

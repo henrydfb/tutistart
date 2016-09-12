@@ -18,6 +18,6 @@ public class DigSummaryController : MonoBehaviour {
 
     public void GoToShoot()
     {
-        SceneManager.LoadScene("Shoot");
+        SceneManager.LoadScene("ShooterPhase");
     }
 }
