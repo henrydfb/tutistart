@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour {
     {
         //Destroy(coll.gameObject);
 
+        points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
         GameObject death_animation = Instantiate(death_animation_prefab) as GameObject;
         death_animation.transform.position = transform.position;
         Destroy(gameObject);

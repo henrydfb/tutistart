@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour {
 
     public float speed = 1.0f;
 
-    int victims = 0;
+    public int victims = 0;
 
 	// Use this for initialization
 	void Start () {
