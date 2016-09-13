@@ -46,14 +46,23 @@ public class Enemy : MonoBehaviour {
         {
             return;
         }
-        points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
-        
-        colliding_bullet = coll.gameObject;
-        fly_direction = (transform.position - colliding_bullet.transform.position).normalized;
-        dead_blow = true;
-        GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
-        GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
-        GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
+
+        Projectile projectile = coll.gameObject.GetComponent<Projectile>();
+
+        if (projectile.isShot())
+        {
+            if (!dead_blow)
+            {
+                points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
+                GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
+                GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
+                GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
+            }
+
+            colliding_bullet = coll.gameObject;
+            fly_direction = (transform.position - colliding_bullet.transform.position).normalized;
+            dead_blow = true;
+        }
     }
 
     void destroyEnemy() {
@@ -72,5 +81,9 @@ public class Enemy : MonoBehaviour {
         if (death_delay >= 1f) {
             destroyEnemy();
         }
+    }
+
+    public bool isDead() {
+        return dead_blow;
     }
 }

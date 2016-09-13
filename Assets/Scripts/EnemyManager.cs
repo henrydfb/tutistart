@@ -27,8 +27,8 @@ public class EnemyManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (enemy_count < wave_size)
-        {
+        //if (enemy_count < wave_size)
+        //{
             timer += Time.deltaTime;
             if (timer >= spawn_frequency)
             {
@@ -38,10 +38,9 @@ public class EnemyManager : MonoBehaviour {
                 p.z = 0;
                 createEnemy(p);
                 timer = 0f;
-                enemy_count += 1;
             }
-        }
-        else if (enemy_on_screen <= 0)
+        //}
+        if (enemy_killed >= wave_size)
         {
             ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
             ShooterData.gameOver = false;
