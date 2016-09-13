@@ -49,19 +49,22 @@ public class Enemy : MonoBehaviour {
 
         Projectile projectile = coll.gameObject.GetComponent<Projectile>();
 
-        if (projectile.isShot())
+        if (projectile != null)
         {
-            if (!dead_blow)
+            if (projectile.isShot())
             {
-                points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
-                GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
-                GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
-                GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
-            }
+                if (!dead_blow)
+                {
+                    points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
+                    GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
+                    GameObject.Find("EnemyManager").GetComponent<EnemyManager>().increaseEnemyKilled();
+                    GameObject.Find("EnemyManager").GetComponent<EnemyManager>().decreaseEnemyOnScreen();
+                }
 
-            colliding_bullet = coll.gameObject;
-            fly_direction = (transform.position - colliding_bullet.transform.position).normalized;
-            dead_blow = true;
+                colliding_bullet = coll.gameObject;
+                fly_direction = (transform.position - colliding_bullet.transform.position).normalized;
+                dead_blow = true;
+            }
         }
     }
 
