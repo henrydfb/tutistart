@@ -11,6 +11,7 @@ public class EnemyManager : MonoBehaviour {
     Enemy enemy;
     float timer = 0f;
     public float spawn_frequency;
+    public int sound_frequency;
     public int wave_size;
     int enemy_count = 0;
     int enemy_killed = 0;
@@ -69,6 +70,13 @@ public class EnemyManager : MonoBehaviour {
         {
             ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
             ShooterData.gameOver = false;
+            AudioSource audio = GameObject.Find("AllEnemyBastard").GetComponent<AudioSource>();
+            float sound_timer = 0f;
+            audio.Play();
+            while (sound_timer < audio.clip.length)
+            {
+                sound_timer += Time.deltaTime;
+            }
             SceneManager.LoadScene("Scenes/EndScene");
         }
     }

@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        //Destroy(coll.gameObject);
+        GameObject.Find("Hit").GetComponent<AudioSource>().Play();
 
         if (coll == null) {
             return;

@@ -121,8 +121,11 @@ public class PlayerController : MonoBehaviour {
         if (indexI + 1 < gameController.GRID_SIZE_I)
         {
             inRock = gameController.grid[indexI + 1][indexJ + 1] == GameController.GridElementType.Rock;
+            if(inRock)
+                GameObject.Find("DigStone").GetComponent<AudioSource>().Play();
             if (gameController.grid[indexI + 1][indexJ + 1] == GameController.GridElementType.Body)
             {
+                GameObject.Find("DigCorpse").GetComponent<AudioSource>().Play();
                 gameController.AddBody();
                 DestroyObject(GameObject.Find((indexI + 1).ToString() + (indexJ + 1).ToString()));
             }
@@ -133,8 +136,11 @@ public class PlayerController : MonoBehaviour {
         else
         {
             inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
+            if (inRock)
+                GameObject.Find("DigStone").GetComponent<AudioSource>().Play();
             if (gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Body)
             {
+                GameObject.Find("DigCorpse").GetComponent<AudioSource>().Play();
                 gameController.AddBody();
                 DestroyObject(GameObject.Find((indexI).ToString() + (indexJ + 1).ToString()));
             }
@@ -142,6 +148,7 @@ public class PlayerController : MonoBehaviour {
             indexJ++;
         }
         isMoving = true;
+        GameObject.Find("DigEarth").GetComponent<AudioSource>().Play();
         animator.Play("PlayerDig");
         movingSpeed = Vector3.Distance(transform.position, movingPos) / MOVING_STEPS;
         GetComponent<SpriteRenderer>().transform.localScale = new Vector3(-initialScaX, GetComponent<SpriteRenderer>().transform.localScale.y, GetComponent<SpriteRenderer>().transform.localScale.z);
@@ -153,8 +160,11 @@ public class PlayerController : MonoBehaviour {
         if (indexI - 1 >= 0)
         {
             inRock = gameController.grid[indexI - 1][indexJ + 1] == GameController.GridElementType.Rock;
+            if (inRock)
+                GameObject.Find("DigStone").GetComponent<AudioSource>().Play();
             if (gameController.grid[indexI - 1][indexJ + 1] == GameController.GridElementType.Body)
             {
+                GameObject.Find("DigCorpse").GetComponent<AudioSource>().Play();
                 gameController.AddBody();
                 DestroyObject(GameObject.Find((indexI - 1).ToString() + (indexJ + 1).ToString()));
             }
@@ -165,8 +175,11 @@ public class PlayerController : MonoBehaviour {
         else
         {
             inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
+            if (inRock)
+                GameObject.Find("DigStone").GetComponent<AudioSource>().Play();
             if (gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Body)
             {
+                GameObject.Find("DigCorpse").GetComponent<AudioSource>().Play();
                 gameController.AddBody();
                 DestroyObject(GameObject.Find(indexI.ToString() + (indexJ + 1).ToString()));
             }
@@ -175,6 +188,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         isMoving = true;
+        GameObject.Find("DigEarth").GetComponent<AudioSource>().Play();
         animator.Play("PlayerDig");
         movingSpeed = Vector3.Distance(transform.position, movingPos) / MOVING_STEPS;
         GetComponent<SpriteRenderer>().transform.localScale = new Vector3(initialScaX, GetComponent<SpriteRenderer>().transform.localScale.y, GetComponent<SpriteRenderer>().transform.localScale.z);

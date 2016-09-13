@@ -11,6 +11,9 @@ public class StoreDataController : MonoBehaviour
     public bool firstLevel = true;
     public int coins;
     public int waveSize = 5;
+    public int bodyPrice = 5;
+    public int timePrice = 5;
+    public int rockPrice = 5;
 
     void Awake()
     {

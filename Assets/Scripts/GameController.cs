@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour {
     private float time;
     private int bodies;
     private StoreDataController storeData;
-    
+    private int prevSec;
 	// Use this for initialization
 	void Start () 
     {
@@ -93,6 +93,11 @@ public class GameController : MonoBehaviour {
             BODIES_NUM = storeData.MAX_BODIES;
             ROCKS_NUM = storeData.MAX_ROCKS;
             INITIAL_TIME = storeData.TIME;
+
+
+            storeData.bodyPrice = (int)(storeData.bodyPrice * 1.6f);
+            storeData.timePrice = (int)(storeData.timePrice * 1.6f);
+            storeData.rockPrice = (int)(storeData.rockPrice * 1.6f);
         }
 
         if (GameObject.FindGameObjectWithTag("ShooterData") == null)
@@ -112,7 +117,9 @@ public class GameController : MonoBehaviour {
         int min, sec;
 
         min = (int)(time / 60);
+        
         sec = (int)(time % 60);
+        prevSec = sec;
         timerText.text = min.ToString("00") + ":" + sec.ToString("00");
     }
 

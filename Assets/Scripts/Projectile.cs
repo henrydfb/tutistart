@@ -93,6 +93,7 @@ public class Projectile : MonoBehaviour {
 
     private void shoot() {
         if (direction == Vector3.zero) {
+            Destroy(aim_assist);
             Destroy(gameObject);
             return;
         }

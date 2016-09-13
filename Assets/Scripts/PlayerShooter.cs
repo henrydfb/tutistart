@@ -53,6 +53,7 @@ public class PlayerShooter : MonoBehaviour {
 
         if (controller.isReleased())
         {
+            GameObject.Find("Throw").GetComponent<AudioSource>().Play();
             sprite_rend.sprite = shoot_sprite;
             has_shot = true;
         }
@@ -102,7 +103,7 @@ public class PlayerShooter : MonoBehaviour {
     void OnDestroy()
     {
         ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
-        ShooterData.savePlayer(score, life, corpses);
+        ShooterData.savePlayer(score + corpses, life, corpses);
     }
 
     public void createProjectile() {

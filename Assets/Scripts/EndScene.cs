@@ -25,7 +25,10 @@ public class EndScene : MonoBehaviour {
         {
             GameObject.Find("Title").GetComponent<Text>().text = "Game Over";
             GameObject.Find("ButtonText").GetComponent<Text>().text = "Return to title";
+            GameObject.Find("BGMLose").GetComponent<AudioSource>().Play();
         }
+        else
+            GameObject.Find("BGMClear").GetComponent<AudioSource>().Play();
     }
 	
 	// Update is called once per frame
@@ -36,8 +39,25 @@ public class EndScene : MonoBehaviour {
     public void clickOnButton()
     {
         if (gameOver)
+        {
+            playSound("NormalTap");
             SceneManager.LoadScene("Main_Menu");
+        }
         else
+        {
+            playSound("EscapeTap");
             SceneManager.LoadScene("Dig");
+        }
+    }
+
+    public void playSound(string sound)
+    {
+        AudioSource audio = GameObject.Find(sound).GetComponent<AudioSource>();
+        float timer = 0f;
+        audio.Play();
+        while (timer < audio.clip.length)
+        {
+            timer += Time.deltaTime;
+        }
     }
 }
