@@ -95,7 +95,16 @@ public class GameController : MonoBehaviour {
             INITIAL_TIME = storeData.TIME;
         }
 
-        storeData.coins = 500;
+        if (GameObject.FindGameObjectWithTag("ShooterData") == null)
+            storeData.coins = 0;
+        else
+        {
+            ShooterData data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+
+            storeData.coins = data.score;
+        }
+
+        
     }
 
     public void UpdateTimer()

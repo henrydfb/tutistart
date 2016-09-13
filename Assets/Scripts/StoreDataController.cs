@@ -10,6 +10,7 @@ public class StoreDataController : MonoBehaviour
     public int bodies;
     public bool firstLevel = true;
     public int coins;
+    public int waveSize = 5;
 
     void Awake()
     {

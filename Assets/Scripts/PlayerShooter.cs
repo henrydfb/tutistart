@@ -28,11 +28,11 @@ public class PlayerShooter : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        /*GameObject storeDataObj;
+        GameObject storeDataObj;
 
         storeDataObj = GameObject.FindGameObjectWithTag("StoreData");
         storeData = storeDataObj.GetComponent<StoreDataController>();
-        corpses = storeData.bodies;*/
+        corpses = storeData.bodies;
         controller = GameObject.FindWithTag("GameController").GetComponent<Controls>();
         score_display = GameObject.Find("PlayerScoreDisplay");
         score_display.GetComponent<Text>().text = "Player Score : " + score;

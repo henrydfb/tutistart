@@ -19,11 +19,21 @@ public class EnemyManager : MonoBehaviour {
     public float spawn_area_down;
     int enemy_on_screen = 0;
 
-    int level = 2;
+    int level;
     float offset_y = 0f;
+    private StoreDataController storeData;
 
     // Use this for initialization
     void Start () {
+        GameObject storeDataObj;
+
+        storeDataObj = GameObject.FindGameObjectWithTag("StoreData");
+        storeData = storeDataObj.GetComponent<StoreDataController>();
+        level = storeData.level;
+        wave_size = storeData.waveSize + level + 1;
+        Debug.Log("s " + wave_size + " m " + storeData.waveSize);
+        storeData.waveSize = wave_size;
+
         enemy_count_display = GameObject.Find("EnemyCountDisplay");
         enemy_count_display.GetComponent<Text>().text = "Enemy killed : 0 / " + wave_size;
     }
