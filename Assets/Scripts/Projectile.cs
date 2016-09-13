@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Projectile : MonoBehaviour {
 
@@ -21,6 +22,8 @@ public class Projectile : MonoBehaviour {
 
     ComboUI ui_combo;
     Rigidbody2D coll;
+
+    List<Enemy> collidedEnemies;
 
     bool is_shot = false;
     bool has_passed_screen = false;
@@ -44,6 +47,8 @@ public class Projectile : MonoBehaviour {
         aim_assist.transform.position = transform.position;
 
         shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+
+        collidedEnemies = new List<Enemy>();
     }
 	
 	// Update is called once per frame
@@ -115,12 +120,30 @@ public class Projectile : MonoBehaviour {
         {
             Destroy(aim_assist);
             Destroy(gameObject);
+            PlayerShooter player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShooter>();
+            player.decreaseCorpse();
         }
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
 
-        victims += 1;
+        if (coll == null) {
+            return;
+        }
+
+        if (coll.gameObject == null)
+            return;
+
+        Physics2D.IgnoreCollision(coll.collider, GetComponent<Collider2D>(),!is_shot);
+        
+        Enemy target = coll.gameObject.GetComponent<Enemy>();
+
+        if (collidedEnemies.IndexOf(target) == -1)
+        {
+            victims += 1;
+            collidedEnemies.Add(target);
+        }
+
 
         if (victims > shooter_data.max_combo)
             shooter_data.max_combo = victims;
@@ -128,5 +151,9 @@ public class Projectile : MonoBehaviour {
         if (victims > 1) {
             ui_combo.showCombo(victims);
         }
+    }
+
+    public bool isShot() {
+        return is_shot;
     }
 }

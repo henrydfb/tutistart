@@ -51,12 +51,6 @@ public class PlayerShooter : MonoBehaviour {
 
         lookAtCursor();
 
-        if (controller.isClicked())
-        {
-            createProjectile();
-            sprite_rend.sprite = aim_sprite;
-        }
-
         if (controller.isReleased())
         {
             GameObject.Find("Throw").GetComponent<AudioSource>().Play();
@@ -80,11 +74,13 @@ public class PlayerShooter : MonoBehaviour {
         {
             createProjectile();
             sprite_rend.sprite = aim_sprite;
-            corpses -= 1;
-            corpses_display.GetComponent<Text>().text = "Corpses : " + corpses;
+            
+            
         }
 
-        if (life <= 0)
+        corpses_display.GetComponent<Text>().text = "Corpses : " + corpses;
+
+        if (life <= 0 || corpses <= 0)
         {
             ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
             ShooterData.gameOver = true;
@@ -124,5 +120,9 @@ public class PlayerShooter : MonoBehaviour {
     {
         life -= life_lose;
         life_display.GetComponent<Text>().text = "Player life : " + life;
+    }
+
+    public void decreaseCorpse() {
+        corpses -= 1;
     }
 }
