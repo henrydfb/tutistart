@@ -41,7 +41,7 @@ public class EnemyManager : MonoBehaviour {
                 enemy_count += 1;
             }
         }
-        else if (enemy_on_screen == 0)
+        else if (enemy_on_screen <= 0)
         {
             ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
             ShooterData.gameOver = false;
