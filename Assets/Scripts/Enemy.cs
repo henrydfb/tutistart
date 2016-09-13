@@ -39,7 +39,11 @@ public class Enemy : MonoBehaviour {
     {
         //Destroy(coll.gameObject);
 
-        if (coll == null || coll.gameObject == null) {
+        if (coll == null) {
+            return;
+        }
+        if (coll.gameObject == null)
+        {
             return;
         }
         points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
