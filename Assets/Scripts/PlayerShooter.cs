@@ -16,6 +16,7 @@ public class PlayerShooter : MonoBehaviour {
 
     public Sprite aim_sprite;
     public Sprite shoot_sprite;
+    private StoreDataController storeData;
 
     public int score;
     public int life;
@@ -27,12 +28,17 @@ public class PlayerShooter : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        /*GameObject storeDataObj;
+
+        storeDataObj = GameObject.FindGameObjectWithTag("StoreData");
+        storeData = storeDataObj.GetComponent<StoreDataController>();
+        corpses = storeData.bodies;*/
         controller = GameObject.FindWithTag("GameController").GetComponent<Controls>();
         score_display = GameObject.Find("PlayerScoreDisplay");
         score_display.GetComponent<Text>().text = "Player Score : " + score;
         life_display = GameObject.Find("PlayerLifeDisplay");
         life_display.GetComponent<Text>().text = "Player life : " + life;
-
+        
 
         sprite_rend = GetComponent<SpriteRenderer>();
 
