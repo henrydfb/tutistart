@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour {
         is_shot = false;
         ui_combo = GameObject.FindWithTag("ComboUI").GetComponent<ComboUI>();
 
-        aim_assist = Instantiate(aim_assist_prefab,transform) as GameObject;
+        aim_assist = Instantiate(aim_assist_prefab,transform.transform.position,Quaternion.identity) as GameObject; //WE HAVE TO ASK ABOUT THIS
         aim_assist.transform.localPosition = Vector3.zero;
 
         shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();

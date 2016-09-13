@@ -212,7 +212,10 @@ public class GameController : MonoBehaviour {
             //Pass data to DigSummary
             storeData.bodies = bodies;
             //Next Part of the game
-            SceneManager.LoadScene("DigSummary");
+            if(bodies > 0)
+                SceneManager.LoadScene("DigSummary");
+            else
+                SceneManager.LoadScene("GameOver");
         }
 
         UpdateTimer();
