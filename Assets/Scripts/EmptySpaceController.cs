@@ -14,7 +14,7 @@ public class EmptySpaceController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y >= player.transform.position.y + gameController.gridSeparation * 8)
+        if (transform.position.y >= player.transform.position.y + gameController.gridSeparationJ * 2.5f)
             Destroy(gameObject);
     }
 }

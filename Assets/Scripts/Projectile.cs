@@ -26,6 +26,7 @@ public class Projectile : MonoBehaviour {
     bool has_passed_screen = false;
 
     public float speed = 1.0f;
+    public float rotation_speed = 1.0f;
 
     public int victims = 0;
 
@@ -39,8 +40,8 @@ public class Projectile : MonoBehaviour {
         is_shot = false;
         ui_combo = GameObject.FindWithTag("ComboUI").GetComponent<ComboUI>();
 
-        aim_assist = Instantiate(aim_assist_prefab,transform) as GameObject;
-        aim_assist.transform.localPosition = Vector3.zero;
+        aim_assist = Instantiate(aim_assist_prefab) as GameObject;
+        aim_assist.transform.position = transform.position;
 
         shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
     }
@@ -48,6 +49,8 @@ public class Projectile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         direction = (init_position - position).normalized;
+
+        rotate();
 
         if (controller.hold && !is_shot)
             aim();
@@ -62,6 +65,10 @@ public class Projectile : MonoBehaviour {
 
         destroyIfInvisible();
 	}
+
+    void rotate() {
+        transform.Rotate(new Vector3(0f, 0f, 1f), rotation_speed * Time.deltaTime);
+    }
 
     private void aim() {
 
@@ -96,6 +103,7 @@ public class Projectile : MonoBehaviour {
 
     private void moveProjectile() {
         transform.position = transform.position + direction * speed * Time.deltaTime;
+        aim_assist.transform.position = transform.position;
 
         if (!screen.isObjectOutOfScreen(gameObject)) {
             has_passed_screen = true;
@@ -104,8 +112,10 @@ public class Projectile : MonoBehaviour {
 
     private void destroyIfInvisible() {
         if (screen.isObjectOutOfScreen(gameObject) && has_passed_screen)
+        {
+            Destroy(aim_assist);
             Destroy(gameObject);
-
+        }
     }
 
     void OnCollisionEnter2D(Collision2D coll) {
