@@ -19,6 +19,6 @@ public class MainMenu : MonoBehaviour {
 
     public void goToUpgrade()
     {
-        //SceneManager.LoadScene();
+        SceneManager.LoadScene("Upgrade");
     }
 }
