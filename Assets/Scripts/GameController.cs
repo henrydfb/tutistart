@@ -24,7 +24,7 @@ public class GameController : MonoBehaviour {
     public Vector3 gridStartPos;
     public GridElementType[][] grid;
 
-    private int initialTime = 500; //Seconds
+    private int initialTime = 100; //Seconds
     private PlayerController player;
     private bool instantiating;
     private float lastBodiesRow;

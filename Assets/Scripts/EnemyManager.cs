@@ -43,8 +43,16 @@ public class EnemyManager : MonoBehaviour {
         }
         else if (enemy_on_screen == 0)
         {
-            SceneManager.LoadScene("Scenes/Dig");
+            ShooterData ShooterData = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+            ShooterData.gameOver = false;
+            SceneManager.LoadScene("Scenes/EndScene");
         }
+    }
+
+    void OnDestroy()
+    {
+        ShooterData shooter_data = GameObject.FindGameObjectWithTag("ShooterData").GetComponent<ShooterData>();
+        shooter_data.saveEnemyManager(enemy_killed, wave_size);
     }
 
     public void increaseEnemyKilled()

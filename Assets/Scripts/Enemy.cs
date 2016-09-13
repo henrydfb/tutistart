@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour {
     float death_delay = 0f;
 
     Vector3 fly_direction;
-
     GameObject colliding_bullet;
 
 	// Use this for initialization
@@ -40,9 +39,12 @@ public class Enemy : MonoBehaviour {
     {
         //Destroy(coll.gameObject);
 
-        colliding_bullet = coll.gameObject;
-
+        if (coll == null || coll.gameObject == null) {
+            return;
+        }
+        points *= coll.gameObject.GetComponent<Projectile>().victims + 1;
         
+        colliding_bullet = coll.gameObject;
         fly_direction = (transform.position - colliding_bullet.transform.position).normalized;
         dead_blow = true;
         GameObject.Find("Player").GetComponent<PlayerShooter>().increaseScore(points);
