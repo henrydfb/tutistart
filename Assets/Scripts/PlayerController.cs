@@ -5,20 +5,25 @@ public class PlayerController : MonoBehaviour {
     
     public int indexI;
     public int indexJ;
-    public GameObject emptySpacePrefab;
+    public GameObject emptySpacePrefab1;
+    public GameObject emptySpacePrefab2;
+    public GameObject emptySpacePrefab3;
 
     private const int ROCK_TIME = 3;
     private const int MOVING_STEPS = 5;
     private GameController gameController;
     private GameObject rockFeedback;
     private Vector3 velocity;
-    private float speed;
+    private float speedI;
+    private float speedJ;
     private bool inRock;
     private float rockTimer;
     private float rockFeedIniSca;
     private bool isMoving;
     private Vector3 movingPos;
     private float movingSpeed;
+    private Animator animator;
+    private float initialScaX;
     
    
 	// Use this for initialization
@@ -28,9 +33,12 @@ public class PlayerController : MonoBehaviour {
         rockFeedback = transform.Find("rockFeedback").gameObject;
         rockFeedback.SetActive(false);
         rockFeedIniSca = rockFeedback.transform.localScale.x;
-        speed = gameController.gridSeparation;
+        speedI = gameController.gridSeparationI;
+        speedJ = gameController.gridSeparationJ;
         rockTimer = 0;
+        animator = GetComponent<Animator>();
         AdjustSandBack();
+        initialScaX = GetComponent<SpriteRenderer>().transform.localScale.x;
 	}
 	
 	// Update is called once per frame
@@ -38,6 +46,7 @@ public class PlayerController : MonoBehaviour {
     {
         Vector2 aim;
         float prevDist;
+        float ran;
 
         //Input Controller
         HandleInput();
@@ -71,9 +80,17 @@ public class PlayerController : MonoBehaviour {
             {
                 transform.position = movingPos;
                 isMoving = false;
+                animator.Play("Idle");
             }
             GameObject.Find("SandBack").GetComponent<SandBackController>().Emit(transform.position);
-            Instantiate(emptySpacePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+            ran = Random.Range(0.0f, 100.0f);
+
+            if(ran >= 0 && ran < 100/3)
+                Instantiate(emptySpacePrefab1, new Vector3(transform.position.x, transform.position.y - 0.13f, 0), Quaternion.identity);
+            else if(ran >= 100/3 && ran < 2*(100/3))
+                Instantiate(emptySpacePrefab2, new Vector3(transform.position.x, transform.position.y - 0.13f, 0), Quaternion.identity);
+            else
+                Instantiate(emptySpacePrefab3, new Vector3(transform.position.x, transform.position.y - 0.13f, 0), Quaternion.identity);
         }
 	}
 
@@ -104,19 +121,30 @@ public class PlayerController : MonoBehaviour {
         if (indexI + 1 < gameController.GRID_SIZE_I)
         {
             inRock = gameController.grid[indexI + 1][indexJ + 1] == GameController.GridElementType.Rock;
-            movingPos = transform.position + new Vector3(speed, -speed);
+            if (gameController.grid[indexI + 1][indexJ + 1] == GameController.GridElementType.Body)
+            {
+                gameController.AddBody();
+                DestroyObject(GameObject.Find((indexI + 1).ToString() + (indexJ + 1).ToString()));
+            }
+            movingPos = transform.position + new Vector3(speedI, -speedJ);
             indexI++;
             indexJ++;
         }
         else
         {
             inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
-            movingPos = transform.position + new Vector3(0, -speed);
+            if (gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Body)
+            {
+                gameController.AddBody();
+                DestroyObject(GameObject.Find((indexI).ToString() + (indexJ + 1).ToString()));
+            }
+            movingPos = transform.position + new Vector3(0, -speedJ);
             indexJ++;
         }
         isMoving = true;
+        animator.Play("PlayerDig");
         movingSpeed = Vector3.Distance(transform.position, movingPos) / MOVING_STEPS;
-
+        GetComponent<SpriteRenderer>().transform.localScale = new Vector3(-initialScaX, GetComponent<SpriteRenderer>().transform.localScale.y, GetComponent<SpriteRenderer>().transform.localScale.z);
         //Instantiate(emptySpacePrefab, new Vector3(movingPos.x, movingPos.y, 0), Quaternion.identity);
     }
 
@@ -125,19 +153,31 @@ public class PlayerController : MonoBehaviour {
         if (indexI - 1 >= 0)
         {
             inRock = gameController.grid[indexI - 1][indexJ + 1] == GameController.GridElementType.Rock;
-            movingPos = transform.position + new Vector3(-speed, -speed);
+            if (gameController.grid[indexI - 1][indexJ + 1] == GameController.GridElementType.Body)
+            {
+                gameController.AddBody();
+                DestroyObject(GameObject.Find((indexI - 1).ToString() + (indexJ + 1).ToString()));
+            }
+            movingPos = transform.position + new Vector3(-speedI, -speedJ);
             indexI--;
             indexJ++;
         }
         else
         {
             inRock = gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Rock;
-            movingPos = transform.position + new Vector3(0, -speed);
+            if (gameController.grid[indexI][indexJ + 1] == GameController.GridElementType.Body)
+            {
+                gameController.AddBody();
+                DestroyObject(GameObject.Find(indexI.ToString() + (indexJ + 1).ToString()));
+            }
+            movingPos = transform.position + new Vector3(0, -speedJ);
             indexJ++;
         }
 
         isMoving = true;
+        animator.Play("PlayerDig");
         movingSpeed = Vector3.Distance(transform.position, movingPos) / MOVING_STEPS;
+        GetComponent<SpriteRenderer>().transform.localScale = new Vector3(initialScaX, GetComponent<SpriteRenderer>().transform.localScale.y, GetComponent<SpriteRenderer>().transform.localScale.z);
         //Instantiate(emptySpacePrefab, new Vector3(movingPos.x, movingPos.y, 0), Quaternion.identity);
     }
 
@@ -169,15 +209,15 @@ public class PlayerController : MonoBehaviour {
 
     private void AdjustSandBack()
     {
-        GameObject.Find("SandBack").transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y - 2.3f, GameObject.Find("SandBack").transform.position.z);
+        GameObject.Find("SandBack").transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y - 3f, GameObject.Find("SandBack").transform.position.z);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    /*void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Body")
         {
             gameController.AddBody();
             DestroyObject(other.gameObject);
         }
-    }
+    }*/
 }
