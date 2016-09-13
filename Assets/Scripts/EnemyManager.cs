@@ -19,6 +19,9 @@ public class EnemyManager : MonoBehaviour {
     public float spawn_area_down;
     int enemy_on_screen = 0;
 
+    int level = 2;
+    float offset_y = 0f;
+
     // Use this for initialization
     void Start () {
         enemy_count_display = GameObject.Find("EnemyCountDisplay");
@@ -30,10 +33,22 @@ public class EnemyManager : MonoBehaviour {
         //if (enemy_count < wave_size)
         //{
             timer += Time.deltaTime;
-            if (timer >= spawn_frequency)
+            if (timer >= spawn_frequency / level)
             {
-                Vector3 point = new Vector3(Random.Range(20f, Screen.width - 20f), Random.Range(Screen.height * spawn_area_down, Screen.height * spawn_area_up), 0);
-                Camera camera = Camera.main;
+            if ((Screen.height * spawn_area_down - level * 0.1f) > 0.5f)
+            {
+                Debug.Log("> 0.5f");
+                offset_y = Screen.height * spawn_area_down - level * 0.1f;
+                Debug.Log(spawn_area_down - level * 0.1f);
+
+            }
+            else {
+                Debug.Log("< 0.5f");
+                offset_y = Screen.height * spawn_area_down;
+            }
+
+            Vector3 point = new Vector3(Random.Range(20f, Screen.width - 20f), Random.Range(offset_y, Screen.height * spawn_area_up), 0);
+            Camera camera = Camera.main;
                 Vector3 p = camera.ScreenToWorldPoint(point);
                 p.z = 0;
                 createEnemy(p);

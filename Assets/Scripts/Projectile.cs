@@ -53,7 +53,6 @@ public class Projectile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        print(victims);
         direction = (init_position - position).normalized;
 
         rotate();
