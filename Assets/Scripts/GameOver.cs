@@ -22,6 +22,13 @@ public class GameOver : MonoBehaviour {
 
     public void goToTitleScreen()
     {
+        AudioSource audio = GameObject.Find("EscapeTap").GetComponent<AudioSource>();
+        float timer = 0f;
+        audio.Play();
+        while (timer < audio.clip.length)
+        {
+            timer += Time.deltaTime;
+        }
         SceneManager.LoadScene("Main_Menu");
     }
 }

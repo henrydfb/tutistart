@@ -18,6 +18,13 @@ public class DigSummaryController : MonoBehaviour {
 
     public void GoToShoot()
     {
+        AudioSource audio = GameObject.Find("NormalTap").GetComponent<AudioSource>();
+        float timer = 0f;
+        audio.Play();
+        while (timer < audio.clip.length)
+        {
+            timer += Time.deltaTime;
+        }
         SceneManager.LoadScene("ShooterPhase");
     }
 }

@@ -38,6 +38,7 @@ public class UpgradeController : MonoBehaviour {
 
     public void IncreaseTime()
     {
+        PlaySound();
         if (storeData != null)
         {
             if (storeData.coins >= TIME_PRICE)
@@ -51,6 +52,7 @@ public class UpgradeController : MonoBehaviour {
 
     public void IncreaseBodies()
     {
+        PlaySound();
         if (storeData != null)
         {
             if (storeData.coins >= BODIES_PRICE)
@@ -64,6 +66,7 @@ public class UpgradeController : MonoBehaviour {
 
     public void DecreaseRocks()
     {
+        PlaySound();
         if (storeData != null)
         {
             if (storeData.coins >= ROCKS_PRICE)
@@ -77,6 +80,18 @@ public class UpgradeController : MonoBehaviour {
 
     public void GoToMainMenu()
     {
+        PlaySound();
         SceneManager.LoadScene("Main_Menu");
+    }
+
+    public void PlaySound()
+    {
+        float timer = 0f;
+        AudioSource audio = GameObject.Find("NormalTap").GetComponent<AudioSource>();
+        audio.Play();
+        while (timer < audio.clip.length)
+        {
+            timer += Time.deltaTime;
+        }
     }
 }

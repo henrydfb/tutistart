@@ -59,6 +59,7 @@ public class PlayerShooter : MonoBehaviour {
 
         if (controller.isReleased())
         {
+            GameObject.Find("Throw").GetComponent<AudioSource>().Play();
             sprite_rend.sprite = shoot_sprite;
             has_shot = true;
         }
